@@ -46,14 +46,13 @@ function showDonutsToUser() {
   //버튼 누르면 pop-up 사라지게 하기
   showBtn.addEventListener("click", () => {
     showPagePopup.classList.add("pop-up--hide");
-    setTimeout(() => {
-      console.log("set donuts!");
-      //pop-up 사라지고 1초 후부터 정답 도넛 설정,
-      setAnswerDonuts();
-      // 도넛 하나씩 보이게 하기
-      showAnswerDonuts();
-    }, 1000);
+    console.log("set donuts!");
+    //정답 도넛 설정
+    setAnswerDonuts();
+    // 도넛 하나씩 보이게 하기
+    showAnswerDonuts().then(() => scrollIntoView("#game-page"));
   });
+
   //도넛이 전부 출력되면 다음 페이지 스크롤하기
 }
 
@@ -76,18 +75,20 @@ function getRandomInts(min, max) {
 }
 
 function showAnswerDonuts() {
-  let AnswerCount = 0;
-  showField.innerHTML = "";
-  showCount.innerHTML = DONUT_COUNT - AnswerCount;
-  showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
-  timer = setInterval(() => {
-    if (AnswerCount >= 4) {
-      clearInterval(timer);
-      return;
-    }
-    console.log(AnswerCount);
-    AnswerCount += 1;
+  return new Promise((resolve) => {
+    let AnswerCount = 0;
     showCount.innerHTML = DONUT_COUNT - AnswerCount;
     showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
-  }, ANSWER_INTERVAL);
+    timer = setInterval(() => {
+      if (AnswerCount >= 4) {
+        clearInterval(timer);
+        resolve();
+        return;
+      }
+      console.log(AnswerCount);
+      AnswerCount += 1;
+      showCount.innerHTML = DONUT_COUNT - AnswerCount;
+      showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
+    }, ANSWER_INTERVAL);
+  });
 }
