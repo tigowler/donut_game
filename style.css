@@ -1,5 +1,5 @@
 :root {
-  font-family: "Arimo", sans-serif;
+  font-family: "Road Rage", cursive;
 }
 
 ::-webkit-scrollbar {
@@ -21,35 +21,43 @@ button {
 }
 
 #main {
+  position: relative;
   width: 100vw;
   height: 100vh;
   background-color: thistle;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-#main div {
-  width: 700px;
-  height: 400px;
+.main__area {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 700px;
+  height: 400px;
   background-color: antiquewhite;
   border-radius: 10px;
 }
 
 #main span {
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 48px;
   padding: 20px 0;
 }
-
-#main img {
-  width: 200px;
-  height: 200px;
+.main__image {
   margin-bottom: 20px;
+}
+
+.main__image img {
+  width: 55px;
+  height: 55px;
+  transition: transform 150ms ease-in-out;
+}
+
+.main__image img:hover {
+  transform: scale(1.1);
 }
 
 #main button {
@@ -169,7 +177,6 @@ button {
 
 .show__message {
   font-size: 32px;
-  font-weight: 600;
   padding: 20px 0;
 }
 
