@@ -19,6 +19,8 @@
 
 body {
   margin: 0;
+  /*overflow: hidden;
+  height: 100%;*/
 }
 
 button {
@@ -77,13 +79,13 @@ button {
   text-align: center;
   line-height: 70px;
   color: var(--color-white);
-  background-color: var(--color-yellow);
+  background-color: var(--color-orange-brown);
   border-radius: 10px;
   transition: all 150ms ease-in-out;
 }
 
 #main button:hover {
-  background-color: var(--color-orange-brown);
+  background-color: var(--color-yellow);
   transform: scale(1.1);
 }
 
@@ -214,15 +216,11 @@ button {
   transform: scale(1.1);
 }
 
-.show__timer {
-  font-size: 48px;
-  color: var(--color-red-brown);
-}
-
-.show__message {
-  font-size: 48px;
-  color: white;
-  padding-bottom: 10px;
+.show__count {
+  font-size: 80px;
+  line-height: 80px;
+  margin-bottom: 5px;
+  color: var(--color-yellow);
 }
 
 .show__field {
