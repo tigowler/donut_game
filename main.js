@@ -1,7 +1,6 @@
 "use strict";
 
 const DONUT_COUNT = 5;
-const DONUT_SIZE = 80;
 const ANSWER_INTERVAL = 500;
 let timer = undefined;
 const donutsImage = [
@@ -32,8 +31,9 @@ const showField = document.querySelector(".show__field");
 const showCount = document.querySelector(".show__count");
 const gameField = document.querySelector(".game__field");
 const gameFieldRect = gameField.getBoundingClientRect();
+const gameBtn = document.querySelector(".game__button");
 
-mainBtn.addEventListener("click", (event) => {
+mainBtn.addEventListener("click", () => {
   scrollIntoView("#show-page");
   showDonutsToUser();
 });
@@ -55,6 +55,8 @@ function showDonutsToUser() {
     // 도넛 하나씩 보이게 하기
     showAnswerDonuts();
   });
+
+  //도넛이 전부 출력되면 다음 페이지 스크롤하기
 }
 
 function setAnswerDonuts() {
@@ -83,7 +85,6 @@ function showAnswerDonuts() {
     if (AnswerCount >= 4) {
       clearInterval(timer);
       scrollIntoView("#game-page");
-      startGame();
       return;
     }
     console.log(AnswerCount);
@@ -91,43 +92,4 @@ function showAnswerDonuts() {
     showCount.innerHTML = DONUT_COUNT - AnswerCount;
     showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
   }, ANSWER_INTERVAL);
-}
-
-function startGame() {
-  console.log("lets start");
-  // 도넛 랜덤 배치
-  FieldInit();
-  // 드래그
-  // 정답-오답 판정 - 팝업
-  // 시작-중지 버튼 - 팝업
-  // 타이머 - 시간초과 팝업
-}
-
-function FieldInit() {
-  gameField.innerHTML = "";
-  addDonutOnField();
-}
-
-function addDonutOnField() {
-  const x1 = 0;
-  const y1 = 0;
-  const x2 = gameFieldRect.width - DONUT_SIZE;
-  const y2 = gameFieldRect.height - DONUT_SIZE;
-  for (let i = 0; i < donutsImage.length; i++) {
-    const item = document.createElement("img");
-    item.setAttribute("class", "donut");
-    item.setAttribute("src", `img/donut_${i + 1}.png`);
-    item.style.width = `${DONUT_SIZE}px`;
-    item.style.height = `${DONUT_SIZE}px`;
-    item.style.position = "absolute";
-    const x = randomPosition(x1, x2);
-    const y = randomPosition(y1, y2);
-    item.style.left = `${x}px`;
-    item.style.top = `${y}px`;
-    gameField.appendChild(item);
-  }
-}
-
-function randomPosition(min, max) {
-  return Math.random() * (max - min) + min;
 }
