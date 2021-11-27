@@ -50,20 +50,20 @@ function showDonutsToUser() {
     //정답 도넛 설정
     setAnswerDonuts();
     // 도넛 하나씩 보이게 하기
-    showAnswerDonuts().then(() => scrollIntoView("#game-page"));
+    showAnswerDonuts();
   });
 
   //도넛이 전부 출력되면 다음 페이지 스크롤하기
 }
 
 function setAnswerDonuts() {
-  for (let i = 0; i < DONUT_COUNT; i++) {
-    // 랜덤 정수 배열로 얻어오기
+  while (answerDonuts.length <= DONUT_COUNT - 1) {
     const randomInt = getRandomInts(1, donutsImage.length - 1);
     console.log(randomInt);
-    // 해당 정수에 해당하는 도넛 이미지만 따로 배열로 만들어 return
-    answerDonuts.push(donutsImage[randomInt]);
-    console.log(donutsImage[randomInt]);
+    if (answerDonuts.indexOf(donutsImage[randomInt]) === -1) {
+      answerDonuts.push(donutsImage[randomInt]);
+      console.log(donutsImage[randomInt]);
+    }
   }
   console.log(answerDonuts);
 }
@@ -75,20 +75,18 @@ function getRandomInts(min, max) {
 }
 
 function showAnswerDonuts() {
-  return new Promise((resolve) => {
-    let AnswerCount = 0;
+  let AnswerCount = 0;
+  showCount.innerHTML = DONUT_COUNT - AnswerCount;
+  showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
+  timer = setInterval(() => {
+    if (AnswerCount >= 4) {
+      clearInterval(timer);
+      scrollIntoView("#game-page");
+      return;
+    }
+    console.log(AnswerCount);
+    AnswerCount += 1;
     showCount.innerHTML = DONUT_COUNT - AnswerCount;
     showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
-    timer = setInterval(() => {
-      if (AnswerCount >= 4) {
-        clearInterval(timer);
-        resolve();
-        return;
-      }
-      console.log(AnswerCount);
-      AnswerCount += 1;
-      showCount.innerHTML = DONUT_COUNT - AnswerCount;
-      showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
-    }, ANSWER_INTERVAL);
-  });
+  }, ANSWER_INTERVAL);
 }
