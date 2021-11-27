@@ -24,30 +24,34 @@ button {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: thistle;
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.main__area {
+.main__area,
+.show {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 700px;
   height: 400px;
-  background-color: antiquewhite;
+  background: url("img/border_1.png");
+  background-size: contain;
+  background-repeat: no-repeat;
   border-radius: 10px;
 }
 
 #main span {
   font-size: 48px;
-  padding: 20px 0;
+  padding: 10px 0;
 }
+
 .main__image {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .main__image img {
@@ -63,11 +67,15 @@ button {
 #main button {
   width: 70px;
   height: 70px;
-  font-size: 36px;
-  text-align: center;
-  line-height: 70px;
-  background-color: cadetblue;
-  border-radius: 10px;
+  font-size: 24px;
+  background-color: white;
+  border: 5px double black;
+  border-radius: 50%;
+  transition: all 300ms ease-in-out;
+}
+
+#main button:hover {
+  transform: scale(1.1);
 }
 
 #game-page,
@@ -82,15 +90,14 @@ button {
 }
 
 #show-page {
-  background-color: teal;
+  background-color: white;
 }
 
 .round {
   position: relative;
 }
 
-.game,
-.show {
+.game {
   width: 700px;
   height: 400px;
   display: flex;
@@ -176,13 +183,17 @@ button {
 }
 
 .show__message {
-  font-size: 32px;
-  padding: 20px 0;
+  font-size: 48px;
+  padding-bottom: 10px;
+}
+
+.show__timer {
+  font-size: 48px;
 }
 
 .show__field {
-  background-color: cornflowerblue;
-  border: 2px solid black;
+  background-color: black;
+  border: 5px double white;
   border-radius: 10px;
 }
 
