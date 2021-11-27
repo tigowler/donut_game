@@ -62,9 +62,8 @@ button {
   border-radius: 10px;
 }
 
-#round1,
-#round2,
-#round3 {
+#game-page,
+#show-page {
   width: 100vw;
   height: 100vh;
   background-color: lightblue;
@@ -74,24 +73,22 @@ button {
   align-items: center;
 }
 
-#round2 {
+#show-page {
   background-color: teal;
-}
-
-#round3 {
-  background-color: cornflowerblue;
 }
 
 .round {
   position: relative;
 }
 
-.game {
+.game,
+.show {
   width: 700px;
   height: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-color: palegreen;
   border-radius: 10px;
 }
@@ -168,4 +165,22 @@ button {
   font-size: 32px;
   background-color: steelblue;
   border-radius: 10px;
+}
+
+.show__message {
+  font-size: 32px;
+  font-weight: 600;
+  padding: 20px 0;
+}
+
+.show__field {
+  background-color: cornflowerblue;
+  border: 2px solid black;
+  border-radius: 10px;
+}
+
+.show__field img {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
 }
