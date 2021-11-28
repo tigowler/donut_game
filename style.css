@@ -246,3 +246,11 @@ button {
 .pop-up--hide {
   display: none;
 }
+
+.donut {
+  transition: transform 150ms ease-in-out;
+}
+
+.donut:hover {
+  transform: scale(1.1);
+}
