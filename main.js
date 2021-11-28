@@ -3,7 +3,10 @@
 const DONUT_COUNT = 5;
 const DONUT_SIZE = 80;
 const ANSWER_INTERVAL = 500;
+
 let timer = undefined;
+let dragged;
+
 const donutsImage = [
   "img/donut_1.png",
   "img/donut_2.png",
@@ -38,6 +41,55 @@ mainBtn.addEventListener("click", () => {
   scrollIntoView("#show-page");
   showDonutsToUser();
 });
+
+document.addEventListener("dragstart", (event) => {
+  console.log("dragstart!");
+  dragged = event.target;
+});
+
+document.addEventListener("dragenter", (event) => {
+  if (
+    event.target.className === "answer__field" &&
+    event.target.childElementCount === 0
+  ) {
+    event.target.style.background = "var(--color-yellow)";
+  }
+});
+
+document.addEventListener("dragleave", (event) => {
+  if (event.target.childElementCount !== 0) {
+    return;
+  }
+  if (event.target.className === "answer__field") {
+    event.target.style.background = "var(--color-white)";
+  }
+});
+
+document.addEventListener("drop", (event) => {
+  event.preventDefault();
+  console.log(`drop target: ${event.target}`);
+  if (event.target.childElementCount >= 1) {
+    return;
+  }
+  if (event.target.className === "answer__field") {
+    dragged.parentNode.removeChild(dragged);
+    const answer = document.createElement("img");
+    answer.classList.add(dragged.className);
+    answer.setAttribute("src", `img/donut_${dragged.dataset.id}.png`);
+    answer.style.width = "40px";
+    answer.style.height = "40px";
+    event.target.appendChild(answer);
+  }
+  checkAnswerDonut(event.target);
+});
+
+function checkAnswerDonut(plate) {
+  // if(plate.firstChild.dataset.id === plate.dataset.index){
+  //   console.log(`answer! ${plate.dataset.index} plate`);
+  // }else{
+  //   console.log(`wrong! ${plate.dataset.index} plate`);
+  // }
+}
 
 function scrollIntoView(selector) {
   const scrollTo = document.querySelector(selector);
@@ -120,6 +172,7 @@ function addDonutOnField() {
     const item = document.createElement("img");
     item.setAttribute("class", "donut");
     item.setAttribute("src", `img/donut_${i + 1}.png`);
+    item.setAttribute("data-id", `${i + 1}`);
     item.style.width = `${DONUT_SIZE}px`;
     item.style.height = `${DONUT_SIZE}px`;
     item.style.position = "absolute";
