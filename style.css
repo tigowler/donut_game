@@ -160,18 +160,6 @@ button {
   color: var(--color-blue);
 }
 
-.game__score {
-  font-size: 18px;
-  margin-left: 40px;
-  background-color: var(--color-hazel);
-  border-radius: 10px;
-  padding: 5px;
-}
-
-.game__score {
-  padding: 5px 15px;
-}
-
 .game__field {
   position: relative;
   width: 100%;
