@@ -1,11 +1,11 @@
 "use strict";
 
-const DONUT_COUNT = 5;
+const DONUT_COUNT = 3;
 const DONUT_SIZE = 80;
 const ANSWER_INTERVAL = 500;
 
 let timer = undefined;
-let dragged;
+let score = 0;
 
 const donutsImage = [
   "img/donut_1.png",
@@ -36,63 +36,83 @@ const showCount = document.querySelector(".show__count");
 const gameField = document.querySelector(".game__field");
 const gameFieldRect = gameField.getBoundingClientRect();
 const gameBtn = document.querySelector(".game__button");
+const answerField = document.querySelector(".answer__field");
+const answerFieldRect = answerField.getBoundingClientRect();
 
 mainBtn.addEventListener("click", () => {
   scrollIntoView("#show-page");
   showDonutsToUser();
 });
 
-document.addEventListener("dragstart", (event) => {
-  console.log("dragstart!");
-  dragged = event.target;
-});
+function MakeDonutDragDrop() {
+  const donuts = gameField.childNodes;
+  let pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  donuts.forEach((element) => {
+    element.onmousedown = clickDonut;
+    function clickDonut(event) {
+      event.preventDefault();
+      pos3 = event.clientX;
+      pos4 = event.clientY;
+      document.onmouseup = dropDragDonut;
+      document.onmousemove = dragDonut;
+    }
 
-document.addEventListener("dragenter", (event) => {
+    function dragDonut(event) {
+      event.preventDefault();
+      pos1 = pos3 - event.clientX;
+      pos2 = pos4 - event.clientY;
+      pos3 = event.clientX;
+      pos4 = event.clientY;
+      element.style.top = `${element.offsetTop - pos2}px`;
+      element.style.left = `${element.offsetLeft - pos1}px`;
+      element.style.opacity = "0.5";
+    }
+
+    function dropDragDonut(event) {
+      document.onmouseup = null;
+      document.onmousemove = null;
+      element.style.opacity = "1"; //수정 필요
+      if (checkDonutOnPlate(event)) {
+        checkAnswerDonut(event.target);
+      }
+    }
+  });
+}
+
+function checkDonutOnPlate(event) {
+  const left = answerFieldRect.left;
+  const right = answerFieldRect.right;
+  const top = answerFieldRect.top;
+  const bottom = answerFieldRect.bottom;
+  //console.log(`left: ${left}, right: ${right}, top: ${top}, bottom: ${bottom}`);
+  //console.log(`PageX: ${event.pageX}, clientY: ${event.pageY}`);
   if (
-    event.target.className === "answer__field" &&
-    event.target.childElementCount === 0
+    event.pageX > left &&
+    event.pageX < right &&
+    event.pageY > top &&
+    event.pageY < bottom
   ) {
-    event.target.style.background = "var(--color-yellow)";
-  }
-});
-
-document.addEventListener("dragleave", (event) => {
-  if (event.target.childElementCount !== 0) {
-    return;
-  }
-  if (event.target.className === "answer__field") {
-    event.target.style.background = "var(--color-white)";
-  }
-});
-
-document.addEventListener("drop", (event) => {
-  event.preventDefault();
-  console.log(`drop target: ${event.target}`);
-  if (event.target.childElementCount >= 1) {
-    return;
-  }
-  if (event.target.className === "answer__field") {
-    dragged.parentNode.removeChild(dragged);
-    const answer = document.createElement("img");
-    answer.classList.add(dragged.className);
-    answer.setAttribute("src", `img/donut_${dragged.dataset.id}.png`);
-    answer.style.width = "40px";
-    answer.style.height = "40px";
-    answer.dataset.id = dragged.dataset.id;
-    console.log(answer.dataset.id);
-    event.target.appendChild(answer);
-  }
-  checkAnswerDonut(event.target);
-});
-
-function checkAnswerDonut(plate) {
-  if (
-    plate.firstChild.dataset.id ===
-    answerDonuts[plate.dataset.index - 1].toString()
-  ) {
-    console.log(`answer! ${plate.dataset.index} plate`);
+    return true;
   } else {
-    console.log(`wrong! ${plate.dataset.index} plate`);
+    return false;
+  }
+}
+
+function checkAnswerDonut(target) {
+  if (target.dataset.id === answerDonuts[score].toString()) {
+    score += 1;
+    target.remove();
+    // 정답이면 드래그한 도넛 삭제하기
+    // answerfield 글자 없애고 도넛 순서대로 추가하기
+    console.log("answer!");
+  } else {
+    target.remove();
+    const item = createDonut(target.dataset.id);
+    gameField.appendChild(item);
+    console.log("wrong!");
   }
 }
 
@@ -129,10 +149,9 @@ function getRandomInts(min, max) {
 function showAnswerDonuts() {
   let AnswerCount = 0;
   showCount.innerHTML = DONUT_COUNT - AnswerCount;
-  // `img/donut_${dragged.dataset.id}.png`
   showField.innerHTML = `<img src="img/donut_${answerDonuts[AnswerCount]}.png" />`;
   timer = setInterval(() => {
-    if (AnswerCount >= 4) {
+    if (AnswerCount >= DONUT_COUNT - 1) {
       clearInterval(timer);
       scrollIntoView("#game-page");
       startGame();
@@ -156,6 +175,9 @@ function startGame() {
 function FieldInit() {
   gameField.innerHTML = "";
   addDonutOnField();
+  if (gameField.childElementCount > 0) {
+    MakeDonutDragDrop();
+  }
 }
 
 function addDonutOnField() {
@@ -164,19 +186,31 @@ function addDonutOnField() {
   const x2 = gameFieldRect.width - DONUT_SIZE;
   const y2 = gameFieldRect.height - DONUT_SIZE;
   for (let i = 0; i < donutsImage.length; i++) {
-    const item = document.createElement("img");
-    item.setAttribute("class", "donut");
-    item.setAttribute("src", `img/donut_${i + 1}.png`);
-    item.setAttribute("data-id", `${i + 1}`);
-    item.style.width = `${DONUT_SIZE}px`;
-    item.style.height = `${DONUT_SIZE}px`;
-    item.style.position = "absolute";
-    const x = randomPosition(x1, x2);
-    const y = randomPosition(y1, y2);
-    item.style.left = `${x}px`;
-    item.style.top = `${y}px`;
+    const item = createDonut(i + 1, x1, x2, y1, y2);
     gameField.appendChild(item);
   }
+}
+
+function createDonut(
+  id,
+  x1 = 0,
+  x2 = gameFieldRect.width - DONUT_SIZE,
+  y1 = 0,
+  y2 = gameFieldRect.height - DONUT_SIZE
+) {
+  const item = document.createElement("img");
+  item.setAttribute("class", "donut");
+  item.setAttribute("src", `img/donut_${id}.png`);
+  item.setAttribute("data-id", `${id}`);
+  item.style.width = `${DONUT_SIZE}px`;
+  item.style.height = `${DONUT_SIZE}px`;
+  item.style.position = "absolute";
+  const x = randomPosition(x1, x2);
+  const y = randomPosition(y1, y2);
+  item.style.left = `${x}px`;
+  item.style.top = `${y}px`;
+
+  return item;
 }
 
 function randomPosition(min, max) {
