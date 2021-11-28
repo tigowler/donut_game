@@ -78,17 +78,22 @@ document.addEventListener("drop", (event) => {
     answer.setAttribute("src", `img/donut_${dragged.dataset.id}.png`);
     answer.style.width = "40px";
     answer.style.height = "40px";
+    answer.dataset.id = dragged.dataset.id;
+    console.log(answer.dataset.id);
     event.target.appendChild(answer);
   }
   checkAnswerDonut(event.target);
 });
 
 function checkAnswerDonut(plate) {
-  // if(plate.firstChild.dataset.id === plate.dataset.index){
-  //   console.log(`answer! ${plate.dataset.index} plate`);
-  // }else{
-  //   console.log(`wrong! ${plate.dataset.index} plate`);
-  // }
+  if (
+    plate.firstChild.dataset.id ===
+    answerDonuts[plate.dataset.index - 1].toString()
+  ) {
+    console.log(`answer! ${plate.dataset.index} plate`);
+  } else {
+    console.log(`wrong! ${plate.dataset.index} plate`);
+  }
 }
 
 function scrollIntoView(selector) {
@@ -97,28 +102,19 @@ function scrollIntoView(selector) {
 }
 
 function showDonutsToUser() {
-  //pop-up 보이게 하기
   showPagePopup.classList.remove("pop-up--hide");
-  //버튼 누르면 pop-up 사라지게 하기
   showBtn.addEventListener("click", () => {
     showPagePopup.classList.add("pop-up--hide");
-    console.log("set donuts!");
-    //정답 도넛 설정
     setAnswerDonuts();
-    // 도넛 하나씩 보이게 하기
     showAnswerDonuts();
   });
-
-  //도넛이 전부 출력되면 다음 페이지 스크롤하기
 }
 
 function setAnswerDonuts() {
   while (answerDonuts.length <= DONUT_COUNT - 1) {
     const randomInt = getRandomInts(1, donutsImage.length - 1);
-    console.log(randomInt);
-    if (answerDonuts.indexOf(donutsImage[randomInt]) === -1) {
-      answerDonuts.push(donutsImage[randomInt]);
-      console.log(donutsImage[randomInt]);
+    if (answerDonuts.indexOf(randomInt) === -1) {
+      answerDonuts.push(randomInt);
     }
   }
   console.log(answerDonuts);
@@ -133,7 +129,8 @@ function getRandomInts(min, max) {
 function showAnswerDonuts() {
   let AnswerCount = 0;
   showCount.innerHTML = DONUT_COUNT - AnswerCount;
-  showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
+  // `img/donut_${dragged.dataset.id}.png`
+  showField.innerHTML = `<img src="img/donut_${answerDonuts[AnswerCount]}.png" />`;
   timer = setInterval(() => {
     if (AnswerCount >= 4) {
       clearInterval(timer);
@@ -141,15 +138,13 @@ function showAnswerDonuts() {
       startGame();
       return;
     }
-    console.log(AnswerCount);
     AnswerCount += 1;
     showCount.innerHTML = DONUT_COUNT - AnswerCount;
-    showField.innerHTML = `<img src="${answerDonuts[AnswerCount]}" />`;
+    showField.innerHTML = `<img src="img/donut_${answerDonuts[AnswerCount]}.png" />`;
   }, ANSWER_INTERVAL);
 }
 
 function startGame() {
-  console.log("lets start");
   // 도넛 랜덤 배치
   FieldInit();
   // 드래그
