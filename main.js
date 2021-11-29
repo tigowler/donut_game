@@ -3,8 +3,10 @@
 const DONUT_COUNT = 3;
 const DONUT_SIZE = 80;
 const ANSWER_INTERVAL = 500;
+const LIFE_COUNT = 3;
 
 let timer = undefined;
+let life = LIFE_COUNT;
 let score = 0;
 
 const donutsImage = [
@@ -38,6 +40,7 @@ const gameFieldRect = gameField.getBoundingClientRect();
 const gameBtn = document.querySelector(".game__button");
 const answerField = document.querySelector(".answer__field");
 const answerFieldRect = answerField.getBoundingClientRect();
+const gameLife = document.querySelector(".game__life");
 
 mainBtn.addEventListener("click", () => {
   scrollIntoView("#show-page");
@@ -104,17 +107,25 @@ function checkDonutOnPlate(event) {
 function checkAnswerDonut(target) {
   if (target.dataset.id === answerDonuts[score].toString()) {
     score += 1;
-    // 정답이면 드래그한 도넛 삭제하기
     target.remove();
-    // answerfield 글자 없애고 도넛 순서대로 추가하기
     addAnswerOnField(target);
     console.log("answer!");
   } else {
+    life -= 1;
+    removeLifeIcon();
     target.remove();
     const item = createDonut(target.dataset.id);
     gameField.appendChild(item);
+    MakeDonutDragDrop();
     console.log("wrong!");
   }
+}
+
+function removeLifeIcon() {
+  if (life < 0) {
+    return;
+  }
+  gameLife.firstElementChild.remove();
 }
 
 function addAnswerOnField(target) {
@@ -180,10 +191,8 @@ function showAnswerDonuts() {
 function startGame() {
   // 도넛 랜덤 배치
   FieldInit();
-  // 드래그
   // 정답-오답 판정 - 팝업
   // 시작-중지 버튼 - 팝업
-  // 타이머 - 시간초과 팝업
 }
 
 function FieldInit() {
