@@ -55,6 +55,8 @@ gamePopupBtn.addEventListener("click", () => {
   showPagePopup.classList.remove("pop-up--hide");
   answerDonuts.length = 0;
   score = 0;
+  answerField.innerHTML = "Drag the cursor with DONUT here!";
+  gamePopup.classList.add("pop-up--hide");
 });
 
 showBtn.addEventListener("click", () => {
@@ -106,8 +108,6 @@ function checkDonutOnPlate(event) {
   const right = answerFieldRect.right;
   const top = answerFieldRect.top;
   const bottom = answerFieldRect.bottom;
-  //console.log(`left: ${left}, right: ${right}, top: ${top}, bottom: ${bottom}`);
-  //console.log(`PageX: ${event.pageX}, clientY: ${event.pageY}`);
   if (
     event.pageX > left &&
     event.pageX < right &&
@@ -125,10 +125,8 @@ function checkAnswerDonut(target) {
     score += 1;
     target.remove();
     addAnswerOnField(target);
-    console.log("answer!");
 
     if (score >= DONUT_COUNT) {
-      console.log("you won");
       gamePopupMessage.innerHTML = "YOU WON 😙";
       gamePopup.classList.remove("pop-up--hide");
     }
@@ -139,10 +137,8 @@ function checkAnswerDonut(target) {
     const item = createDonut(target.dataset.id);
     gameField.appendChild(item);
     MakeDonutDragDrop();
-    console.log("wrong!");
 
     if (life <= 0) {
-      console.log("you lost");
       gamePopupMessage.innerHTML = "YOU LOST 🤔";
       gamePopup.classList.remove("pop-up--hide");
     }
@@ -181,7 +177,6 @@ function setAnswerDonuts() {
       answerDonuts.push(randomInt);
     }
   }
-  console.log(answerDonuts);
 }
 
 function getRandomInts(min, max) {
@@ -220,6 +215,13 @@ function startGame() {
 function FieldInit() {
   gameField.innerHTML = "";
   addDonutOnField();
+  gameLife.innerHTML = "";
+  for (let i = 0; i < LIFE_COUNT; i++) {
+    const life = document.createElement("i");
+    life.classList.add("fas");
+    life.classList.add("fa-star");
+    gameLife.appendChild(life);
+  }
   if (gameField.childElementCount > 0) {
     MakeDonutDragDrop();
   }
