@@ -104,9 +104,10 @@ function checkDonutOnPlate(event) {
 function checkAnswerDonut(target) {
   if (target.dataset.id === answerDonuts[score].toString()) {
     score += 1;
-    target.remove();
     // 정답이면 드래그한 도넛 삭제하기
+    target.remove();
     // answerfield 글자 없애고 도넛 순서대로 추가하기
+    addAnswerOnField(target);
     console.log("answer!");
   } else {
     target.remove();
@@ -114,6 +115,19 @@ function checkAnswerDonut(target) {
     gameField.appendChild(item);
     console.log("wrong!");
   }
+}
+
+function addAnswerOnField(target) {
+  if (score === 1) {
+    answerField.innerHTML = "";
+  }
+  target.style.width = "40px";
+  target.style.height = "40px";
+  target.style.position = "relative";
+  target.style.left = "0px";
+  target.style.top = "0px";
+  target.style.margin = "0px 5px";
+  answerField.appendChild(target);
 }
 
 function scrollIntoView(selector) {
