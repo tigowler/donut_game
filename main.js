@@ -41,10 +41,26 @@ const gameBtn = document.querySelector(".game__button");
 const answerField = document.querySelector(".answer__field");
 const answerFieldRect = answerField.getBoundingClientRect();
 const gameLife = document.querySelector(".game__life");
+const gamePopup = document.querySelector("#game-page .pop-up");
+const gamePopupMessage = document.querySelector("#game-page .pop-up__message");
+const gamePopupBtn = document.querySelector("#game-page .pop-up__btn");
 
 mainBtn.addEventListener("click", () => {
   scrollIntoView("#show-page");
-  showDonutsToUser();
+  showPagePopup.classList.remove("pop-up--hide");
+});
+
+gamePopupBtn.addEventListener("click", () => {
+  scrollIntoView("#show-page");
+  showPagePopup.classList.remove("pop-up--hide");
+  answerDonuts.length = 0;
+  score = 0;
+});
+
+showBtn.addEventListener("click", () => {
+  showPagePopup.classList.add("pop-up--hide");
+  setAnswerDonuts();
+  showAnswerDonuts();
 });
 
 function MakeDonutDragDrop() {
@@ -110,6 +126,12 @@ function checkAnswerDonut(target) {
     target.remove();
     addAnswerOnField(target);
     console.log("answer!");
+
+    if (score >= DONUT_COUNT) {
+      console.log("you won");
+      gamePopupMessage.innerHTML = "YOU WON 😙";
+      gamePopup.classList.remove("pop-up--hide");
+    }
   } else {
     life -= 1;
     removeLifeIcon();
@@ -118,6 +140,12 @@ function checkAnswerDonut(target) {
     gameField.appendChild(item);
     MakeDonutDragDrop();
     console.log("wrong!");
+
+    if (life <= 0) {
+      console.log("you lost");
+      gamePopupMessage.innerHTML = "YOU LOST 🤔";
+      gamePopup.classList.remove("pop-up--hide");
+    }
   }
 }
 
@@ -146,15 +174,6 @@ function scrollIntoView(selector) {
   scrollTo.scrollIntoView({ behavior: "smooth" });
 }
 
-function showDonutsToUser() {
-  showPagePopup.classList.remove("pop-up--hide");
-  showBtn.addEventListener("click", () => {
-    showPagePopup.classList.add("pop-up--hide");
-    setAnswerDonuts();
-    showAnswerDonuts();
-  });
-}
-
 function setAnswerDonuts() {
   while (answerDonuts.length <= DONUT_COUNT - 1) {
     const randomInt = getRandomInts(1, donutsImage.length - 1);
@@ -180,6 +199,7 @@ function showAnswerDonuts() {
       clearInterval(timer);
       scrollIntoView("#game-page");
       startGame();
+      AnswerCount = 0;
       return;
     }
     AnswerCount += 1;
@@ -189,6 +209,8 @@ function showAnswerDonuts() {
 }
 
 function startGame() {
+  life = LIFE_COUNT;
+  score = 0;
   // 도넛 랜덤 배치
   FieldInit();
   // 정답-오답 판정 - 팝업
