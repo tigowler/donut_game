@@ -8,6 +8,7 @@ const LIFE_COUNT = 3;
 let timer = undefined;
 let life = LIFE_COUNT;
 let score = 0;
+let started = false;
 
 const donutsImage = [
   "img/donut_1.png",
@@ -63,6 +64,18 @@ showBtn.addEventListener("click", () => {
   showPagePopup.classList.add("pop-up--hide");
   setAnswerDonuts();
   showAnswerDonuts();
+});
+
+gameBtn.addEventListener("click", () => {
+  if (!started) {
+    return;
+  }
+  started = false;
+  gamePopupMessage.innerHTML = "Wanna play again? 😫";
+  gamePopup.classList.remove("pop-up--hide");
+  const icon = gameBtn.querySelector("i");
+  icon.classList.remove("fa-stop");
+  icon.classList.add("fa-play");
 });
 
 function MakeDonutDragDrop() {
@@ -127,6 +140,7 @@ function checkAnswerDonut(target) {
     addAnswerOnField(target);
 
     if (score >= DONUT_COUNT) {
+      started = false;
       gamePopupMessage.innerHTML = "YOU WON 😙";
       gamePopup.classList.remove("pop-up--hide");
     }
@@ -139,6 +153,7 @@ function checkAnswerDonut(target) {
     MakeDonutDragDrop();
 
     if (life <= 0) {
+      started = false;
       gamePopupMessage.innerHTML = "YOU LOST 🤔";
       gamePopup.classList.remove("pop-up--hide");
     }
@@ -206,6 +221,7 @@ function showAnswerDonuts() {
 function startGame() {
   life = LIFE_COUNT;
   score = 0;
+  started = true;
   // 도넛 랜덤 배치
   FieldInit();
   // 정답-오답 판정 - 팝업
