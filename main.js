@@ -3,29 +3,31 @@
 import Scroll from "./scroll.js";
 import MainPage from "./main-page.js";
 import Show from "./show-page.js";
+import Popup from "./pop-up.js";
 
 history.scrollRestoration = "manual";
 
 const scroll = new Scroll();
 const mainPage = new MainPage();
+const popup = new Popup();
 mainPage.setClickListener(() => {
   scroll.scrollIntoView("#show-page");
 });
 
 const show = new Show(3, 500);
-show.setClickListener(() => {
-  show.showPagePopup.classList.add("pop-up--hide");
+popup.setClickListener((event) => {
+  popup.hide("show");
   show.setAnswerDonuts();
   show.showAnswerDonuts();
 });
 
-show.setRestartClickListener(() => {
+popup.setRestartClickListener((event) => {
   scroll.scrollIntoView("#show-page");
-  show.showPagePopup.classList.remove("pop-up--hide");
+  popup.showWithText("show");
   show.answerDonuts.length = 0;
   show.score = 0;
   show.answerField.innerHTML = "Drag the cursor with DONUT here!";
-  show.gamePopup.classList.add("pop-up--hide");
+  popup.hide("game");
 });
 
 show.setPauseClickListener(() => {
@@ -33,8 +35,7 @@ show.setPauseClickListener(() => {
     return;
   }
   show.started = false;
-  show.gamePopupMessage.innerHTML = "Wanna play again? 😫";
-  show.gamePopup.classList.remove("pop-up--hide");
+  popup.showWithText("game", "Wanna play again? 😫");
   const icon = show.gameBtn.querySelector("i");
   icon.classList.remove("fa-stop");
   icon.classList.add("fa-play");

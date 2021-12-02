@@ -1,6 +1,7 @@
 "use strict";
 
 import Scroll from "./scroll.js";
+import Popup from "./pop-up.js";
 
 const DONUT_SIZE = 80;
 const LIFE_COUNT = 3;
@@ -11,9 +12,8 @@ export default class Show {
     this.answerInterval = answerInterval;
 
     this.scroll = new Scroll();
+    this.popup = new Popup();
 
-    this.showPagePopup = document.querySelector("#show-page .pop-up");
-    this.showBtn = document.querySelector("#show-page .pop-up__btn");
     this.showField = document.querySelector(".show__field");
     this.showCount = document.querySelector(".show__count");
     this.answerDonuts = [];
@@ -26,11 +26,6 @@ export default class Show {
     this.gameBtn = document.querySelector(".game__button");
     this.answerField = document.querySelector(".answer__field");
     this.answerFieldRect = this.answerField.getBoundingClientRect();
-    this.gamePopup = document.querySelector("#game-page .pop-up");
-    this.gamePopupMessage = document.querySelector(
-      "#game-page .pop-up__message"
-    );
-    this.gamePopupBtn = document.querySelector("#game-page .pop-up__btn");
     this.donutsImage = [
       "img/donut_1.png",
       "img/donut_2.png",
@@ -52,24 +47,9 @@ export default class Show {
       "img/donut_18.png",
     ];
 
-    this.gamePopupBtn.addEventListener("click", () => {
-      this.onRestartClick && this.onRestartClick();
-    });
-
-    this.showBtn.addEventListener("click", () => {
-      this.onShowClick && this.onShowClick();
-    });
-
     this.gameBtn.addEventListener("click", () => {
       this.onPauseClick && this.onPauseClick();
     });
-  }
-
-  setClickListener(onShowClick) {
-    this.onShowClick = onShowClick;
-  }
-  setRestartClickListener(onRestartClick) {
-    this.onRestartClick = onRestartClick;
   }
 
   setPauseClickListener(onPauseClick) {
@@ -221,8 +201,7 @@ export default class Show {
 
       if (this.score >= this.donutCount) {
         this.started = false;
-        this.gamePopupMessage.innerHTML = "YOU WON 😙";
-        this.gamePopup.classList.remove("pop-up--hide");
+        this.popup.showWithText("game", "YOU WON 😙");
       }
     } else {
       this.life -= 1;
@@ -234,8 +213,7 @@ export default class Show {
 
       if (this.life <= 0) {
         this.started = false;
-        this.gamePopupMessage.innerHTML = "YOU LOST 🤔";
-        this.gamePopup.classList.remove("pop-up--hide");
+        this.popup.showWithText("game", "YOU LOST 🤔");
       }
     }
   }
