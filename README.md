@@ -1,6 +1,6 @@
 # Donut game
 
-HTML/CSS/Javascript
+HTML/CSS/Javascript: https://tigowler.github.io/donut_game/
 
 ### initial screen
 
