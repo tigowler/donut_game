@@ -2,7 +2,7 @@
 
 import Scroll from "./scroll.js";
 import MainPage from "./main-page.js";
-import Show from "./show-page.js";
+import GameBuilder from "./show-page.js";
 import Popup from "./pop-up.js";
 
 history.scrollRestoration = "manual";
@@ -10,11 +10,16 @@ history.scrollRestoration = "manual";
 const scroll = new Scroll();
 const mainPage = new MainPage();
 const popup = new Popup();
+const show = new GameBuilder()
+  .withAnswerCount(3)
+  .withAnswerInterval(500)
+  .withLifeCount(5)
+  .build();
+
 mainPage.setClickListener(() => {
   scroll.scrollIntoView("#show-page");
 });
 
-const show = new Show(3, 500);
 popup.setClickListener((event) => {
   popup.hide("show");
   show.setAnswerDonuts();

@@ -4,12 +4,39 @@ import Scroll from "./scroll.js";
 import Popup from "./pop-up.js";
 
 const DONUT_SIZE = 80;
-const LIFE_COUNT = 3;
+// const LIFE_COUNT = 3;
 
-export default class Show {
-  constructor(donutCount, answerInterval) {
+export default class GameBuilder {
+  withAnswerCount(num) {
+    this.donutCount = num;
+    return this;
+  }
+
+  withAnswerInterval(duration) {
+    this.answerInterval = duration;
+    return this;
+  }
+
+  withLifeCount(num) {
+    this.life = num;
+    return this;
+  }
+
+  build() {
+    return new Show(
+      this.donutCount, //
+      this.answerInterval,
+      this.life
+    );
+  }
+}
+
+class Show {
+  constructor(donutCount, answerInterval, life) {
     this.donutCount = donutCount;
     this.answerInterval = answerInterval;
+    this.life = life;
+    this.initialLife = life;
 
     this.scroll = new Scroll();
     this.popup = new Popup();
@@ -17,7 +44,6 @@ export default class Show {
     this.showField = document.querySelector(".show__field");
     this.showCount = document.querySelector(".show__count");
     this.answerDonuts = [];
-    this.life = LIFE_COUNT;
     this.score = 0;
     this.started = false;
     this.gameField = document.querySelector(".game__field");
@@ -84,7 +110,7 @@ export default class Show {
   }
 
   start() {
-    this.life = LIFE_COUNT;
+    this.life = this.initialLife;
     this.score = 0;
     this.started = true;
     this.FieldInit();
@@ -94,7 +120,7 @@ export default class Show {
     this.gameField.innerHTML = "";
     this.addDonutOnField();
     this.gameLife.innerHTML = "";
-    for (let i = 0; i < LIFE_COUNT; i++) {
+    for (let i = 0; i < this.initialLife; i++) {
       const life = document.createElement("i");
       life.classList.add("fas");
       life.classList.add("fa-star");
