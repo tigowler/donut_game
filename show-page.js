@@ -2,9 +2,7 @@
 
 import Scroll from "./scroll.js";
 import Popup from "./pop-up.js";
-
-const DONUT_SIZE = 80;
-// const LIFE_COUNT = 3;
+import Field from "./field.js";
 
 export default class GameBuilder {
   withAnswerCount(num) {
@@ -40,38 +38,16 @@ class Show {
 
     this.scroll = new Scroll();
     this.popup = new Popup();
+    this.field = new Field(this.initialLife);
 
     this.showField = document.querySelector(".show__field");
     this.showCount = document.querySelector(".show__count");
     this.answerDonuts = [];
     this.score = 0;
     this.started = false;
-    this.gameField = document.querySelector(".game__field");
-    this.gameFieldRect = this.gameField.getBoundingClientRect();
-    this.gameLife = document.querySelector(".game__life");
     this.gameBtn = document.querySelector(".game__button");
     this.answerField = document.querySelector(".answer__field");
     this.answerFieldRect = this.answerField.getBoundingClientRect();
-    this.donutsImage = [
-      "img/donut_1.png",
-      "img/donut_2.png",
-      "img/donut_3.png",
-      "img/donut_4.png",
-      "img/donut_5.png",
-      "img/donut_6.png",
-      "img/donut_7.png",
-      "img/donut_8.png",
-      "img/donut_9.png",
-      "img/donut_10.png",
-      "img/donut_11.png",
-      "img/donut_12.png",
-      "img/donut_13.png",
-      "img/donut_14.png",
-      "img/donut_15.png",
-      "img/donut_16.png",
-      "img/donut_17.png",
-      "img/donut_18.png",
-    ];
 
     this.gameBtn.addEventListener("click", () => {
       this.onPauseClick && this.onPauseClick();
@@ -84,7 +60,7 @@ class Show {
 
   setAnswerDonuts() {
     while (this.answerDonuts.length <= this.donutCount - 1) {
-      const randomInt = getRandomInts(1, this.donutsImage.length - 1);
+      const randomInt = getRandomInts(1, this.field.donutsImage.length - 1);
       if (this.answerDonuts.indexOf(randomInt) === -1) {
         this.answerDonuts.push(randomInt);
       }
@@ -113,59 +89,12 @@ class Show {
     this.life = this.initialLife;
     this.score = 0;
     this.started = true;
-    this.FieldInit();
-  }
-
-  FieldInit() {
-    this.gameField.innerHTML = "";
-    this.addDonutOnField();
-    this.gameLife.innerHTML = "";
-    for (let i = 0; i < this.initialLife; i++) {
-      const life = document.createElement("i");
-      life.classList.add("fas");
-      life.classList.add("fa-star");
-      this.gameLife.appendChild(life);
-    }
-    if (this.gameField.childElementCount > 0) {
-      this.MakeDonutDragDrop();
-    }
-  }
-
-  addDonutOnField() {
-    const x1 = 0;
-    const y1 = 0;
-    const x2 = this.gameFieldRect.width - DONUT_SIZE;
-    const y2 = this.gameFieldRect.height - DONUT_SIZE;
-    for (let i = 0; i < this.donutsImage.length; i++) {
-      const item = this.createDonut(i + 1, x1, x2, y1, y2);
-      this.gameField.appendChild(item);
-    }
-  }
-
-  createDonut(
-    id,
-    x1 = 0,
-    x2 = this.gameFieldRect.width - DONUT_SIZE,
-    y1 = 0,
-    y2 = this.gameFieldRect.height - DONUT_SIZE
-  ) {
-    const item = document.createElement("img");
-    item.setAttribute("class", "donut");
-    item.setAttribute("src", `img/donut_${id}.png`);
-    item.setAttribute("data-id", `${id}`);
-    item.style.width = `${DONUT_SIZE}px`;
-    item.style.height = `${DONUT_SIZE}px`;
-    item.style.position = "absolute";
-    const x = randomPosition(x1, x2);
-    const y = randomPosition(y1, y2);
-    item.style.left = `${x}px`;
-    item.style.top = `${y}px`;
-
-    return item;
+    this.field.FieldInit();
+    this.MakeDonutDragDrop();
   }
 
   MakeDonutDragDrop() {
-    const donuts = this.gameField.childNodes;
+    const donuts = this.field.gameField.childNodes;
     let pos1 = 0,
       pos2 = 0,
       pos3 = 0,
@@ -231,10 +160,10 @@ class Show {
       }
     } else {
       this.life -= 1;
-      this.gameLife.firstElementChild.remove();
+      this.field.gameLife.firstElementChild.remove();
       target.remove();
-      const item = this.createDonut(target.dataset.id);
-      this.gameField.appendChild(item);
+      const item = this.field.createDonut(target.dataset.id);
+      this.field.gameField.appendChild(item);
       this.MakeDonutDragDrop();
 
       if (this.life <= 0) {
@@ -256,10 +185,6 @@ class Show {
     target.style.margin = "0px 5px";
     this.answerField.appendChild(target);
   }
-}
-
-function randomPosition(min, max) {
-  return Math.random() * (max - min) + min;
 }
 
 function getRandomInts(min, max) {

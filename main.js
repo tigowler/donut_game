@@ -12,7 +12,7 @@ const mainPage = new MainPage();
 const popup = new Popup();
 const show = new GameBuilder()
   .withAnswerCount(3)
-  .withAnswerInterval(500)
+  .withAnswerInterval(1000)
   .withLifeCount(5)
   .build();
 
