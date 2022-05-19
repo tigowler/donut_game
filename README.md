@@ -3,5 +3,4 @@
 📚 **HTML/CSS/Javascript**    
 [**✨Start Game**](https://tigowler.github.io/donut_game/)   
 
-
-<img src="https://user-images.githubusercontent.com/92033114/165806210-46be7496-a6f6-4297-9ebd-fa149c3e0e62.gif">
+![donut](https://user-images.githubusercontent.com/92033114/169338714-0ca00332-15eb-4990-bb6b-4ac899db4920.gif)
